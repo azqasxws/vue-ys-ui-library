@@ -27,7 +27,10 @@ mian.js文件引入
 import YsSelect from 'vue-ys-ui-library'
 Vue.use(YsSelect)
 ```
+```
 <ys-select :selectValue="selectValue" :selectOptions="forms" multiple></ys-select>
+```
+```
 data() {
   return {
     forms: {
