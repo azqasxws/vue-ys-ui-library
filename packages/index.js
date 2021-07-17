@@ -1,8 +1,9 @@
-import upLoad from './upload'
-// import testB from './testB'
+// import SearchTablePagination  from './search-table-pagination '
+import YsSelect from './ys-select'
+import YsButton from './ys-button'
 export default {
     install(Vue) {
-        Vue.use(upLoad);
-        // Vue.use(testB)
-    },
+        Vue.use(YsButton);
+        Vue.use(YsSelect);
+    }
 }

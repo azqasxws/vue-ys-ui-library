@@ -1,15 +1,15 @@
 {
   "name": "vue-ys-ui-library",
-  "version": "0.1.1",
+  "version": "0.1.6",
   "main": "lib/index/index.js",
-  "keyword": "tree-select tree select",
+  "keyword": "vue-ys-ui-library",
   "description": "基于element的组件库",
   "author": "azqasxws",
   "private": false,
   "scripts": {
     "dev": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lib": "vue-cli-service build --target lib --name tree-select --dest lib packages/index.js"
+    "lib": "vue-cli-service build --target lib --name vue-ys-ui-library --dest lib packages/index.js"
   },
   "dependencies": {
     "core-js": "^3.8.1",

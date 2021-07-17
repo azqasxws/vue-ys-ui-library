@@ -1,23 +1,13 @@
 # vue-ys-ui-library
 
-# 安装依赖
+# 使用说明
 ```
-npm install
-```
-
-### 启动命令
-```
-npm run dev
+npm i vue-ys-ui-library
 ```
 
-### 打包命令
+### 使用
 ```
-npm lib
+<div class="test">
+  <el-upload></el-upload>
+</div>
 ```
-### 发布命令
-```
-npm publish
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).

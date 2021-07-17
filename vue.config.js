@@ -56,7 +56,7 @@ const devConfig = {
         open: 'Google Chrome'
     }
 }
-//生成环境配置
+//生产环境配置
 const buildConfig = {
     css: {
         sourceMap: true,
