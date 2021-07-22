@@ -17,11 +17,22 @@
 </template>
 <script>
 import Vue from 'vue'
-import props from './props'
-import fun from './untils'
+import fun from './utils'
 export default {
   name:'YsSelect',
-  props,
+  props: {
+    selectValue: [String, Number, Array],
+    selectOptions: {
+      type: Object,
+      default: () => {
+        return {
+          valueKey: 'value',
+          labelKey: 'label',
+          option: []
+        }
+      }
+    }
+  },
   data(){
     console.log(this.$props)
     let optionsArr = JSON.parse(JSON.stringify(this.selectOptions.option)); // 获取下拉所有数据方便做操作
@@ -41,52 +52,35 @@ export default {
     // 筛选方法
     filterMethod:fun._debounce(function(filterVal){
       let selectListArr = [] 
-      let isArray = Array.isArray(this.selectOldvalue)
-      if(filterVal){
-        let filterArr = this.optionsArr.filter((item)=>{
-          return item.label.toLowerCase().includes(filterVal.toLowerCase())
-        })
-        // 判断是否渲染值为数组还是其他类型判断是否多选
-        if (isArray) {
-          if (this.selectOldvalue.length > 0) {
-            selectListArr = this.getSelectList(this.selectOldvalue, this.optionsArr, this.selectOptions.valueKey);
-            this.resOptions = fun.unique(selectListArr.concat(filterArr),this.selectOptions.valueKey);
-            console.log(this.resOptions);
-          } else {
-            this.resOptions = filterArr;
-            console.log(this.resOptions);
-          }
+      let isArray = Array.isArray(this.selectOldvalue) // 判断是多选还是单选
+      let finalList = [];
+      finalList = !!filterVal ? this.getfilterArr(filterVal) : this.optionsArr; // 判断是否有筛选条件选定赋值数组
+      if (isArray) { // 判断是否多选
+        if (this.selectOldvalue.length > 0) {
+          selectListArr = this.getSelectList(this.selectOldvalue, this.optionsArr, this.selectOptions.valueKey);
+          this.resOptions = fun.unique([...selectListArr,...finalList],this.selectOptions.valueKey);
         } else {
-          this.optionsArr.forEach(item => {
-            if (this.selectOldvalue === item[this.selectOptions.valueKey])
-            selectListArr.push(item)
-          })
-          selectListArr = this.getSelectList([this.selectOldvalue], this.optionsArr, this.selectOptions.valueKey);
-          this.resOptions = fun.unique(selectListArr.concat(filterArr),this.selectOptions.valueKey);
-          console.log(this.resOptions);
+          this.resOptions = !!filterVal ? this.getfilterArr(filterVal) : this.optionsArr.slice(0, this.rangeNumber);
         }
-        // this.resOptions = filterArr;
       } else {
-        // 搜索条件为空判断是否为多选还是单选，做好数据渲染
-        if (isArray) {
-          if (this.selectOldvalue.length > 0) {
-            selectListArr = this.getSelectList(this.selectOldvalue, this.optionsArr, this.selectOptions.valueKey);
-            this.resOptions = fun.unique(selectListArr.concat(this.optionsArr),this.selectOptions.valueKey);
-            console.log(this.resOptions);
-          }
-        } else {
-          this.optionsArr.forEach(item => {
-            if (this.selectOldvalue === item[this.selectOptions.valueKey])
-            selectListArr.push(item)
-          })
-          selectListArr = this.getSelectList([this.selectOldvalue], this.optionsArr, this.selectOptions.valueKey);
-          this.resOptions = fun.unique(selectListArr.concat(this.optionsArr),this.selectOptions.valueKey);
-        }
+        this.optionsArr.forEach(item => {
+          if (this.selectOldvalue === item[this.selectOptions.valueKey])
+          selectListArr.push(item)
+        })
+        selectListArr = this.getSelectList([this.selectOldvalue], this.optionsArr, this.selectOptions.valueKey);
+        this.resOptions = fun.unique([...selectListArr,...finalList],this.selectOptions.valueKey);
       }
-    },200),
+    },50),
+    getfilterArr(filterVal) {
+      let filterArr = this.optionsArr.filter((item)=>{
+        return item.label.toLowerCase().includes(filterVal.toLowerCase())
+      })
+      return filterArr
+    },
     // 下拉框出现时，调用过滤方法
     visibleChange(flag){
       if(flag){
+        this.resOptions = []; // 每次打开初始化清空，避免出现数据改变后出现闪屏
         this.filterMethod()
       }
     },
@@ -101,7 +95,11 @@ export default {
       }
       return selectListArr;
     },
+    // 初始化判断是否有初始值
     getListInit() {
+      let isArray = Array.isArray(this.selectValue);
+      if (isArray && this.selectValue.length > 0) {return this.filterMethod() };
+      if (!isArray && this.selectValue!== '') {return this.filterMethod() };
       this.resOptions = this.optionsArr.slice(0, this.rangeNumber)
     }
   },

@@ -1,13 +1,16 @@
 <template>
 <div>
-  <!-- <el-search-table-pagination
-    type="local"
-    :data="tableData"
-    :page-sizes="[10, 20]"
-    :columns="columns"
-    :form-options="formOptions">
-  </el-search-table-pagination> -->
-  <ys-select  multiple :selectValue="selectValue" @change="selectValueCahgne" filterable :selectOptions="forms" style="width:400px;"></ys-select>
+  <ys-table-pagination :data="list" border v-loading="loading" :columns="columns" :pagination="pagination" :isSelection="true" @selection-change="selectionChange">
+    <template v-slot:handle="slot">
+      <el-button type="primary" size="mini" @click="handleUpdate(slot.scope.row, slot.scope.$index)">
+          修改
+      </el-button>
+      <el-button type="danger" size="mini" @click="handleDelete(slot.scope.row, slot.scope.$index)">
+          清空
+      </el-button>
+    </template>
+  </ys-table-pagination>
+  <!-- <ys-select  clearable :selectValue="selectValue" @change="selectValueCahgne" filterable :selectOptions="forms" style="width:400px;"></ys-select> -->
   <!-- <ys-button :auto-loading="true" @click="submit">
     自动loading按钮
   </ys-button> -->
@@ -17,63 +20,54 @@
 export default {
   data() {
     return {
-      formOptions: {
-        inline: true,
-        submitBtnText: '搜索',
-        forms: [
-          { prop: 'name', label: 'Name' },
-          { prop: 'mobile', label: 'Mobile' },
-          { prop: 'sex', label: 'Sex', itemType: 'select',
-            options: [
-              { value: '', label: 'All' },
-              { value: 0, label: 'Male' },
-              { value: 1, label: 'Female' }
-            ]
-          }
-        ]
+      selectValue: null,
+      list: [
+        { date: '2021/12/12',name: 'Sam', mobile: '15299xxxx', sex: 0 },
+        { date: '2021/12/12',name: 'Jean', mobile: '13452xxxx', sex: 1 },
+        { date: '2021/12/12',name: 'Tony', mobile: '187233xxxx', sex: 0 },
+        { date: '2021/12/12',name: 'Sam', mobile: '15299xxxx', sex: 0 },
+        { date: '2021/12/12',name: 'Jean', mobile: '13452xxxx', sex: 1 },
+        { date: '2021/12/12',name: 'Tony', mobile: '187233xxxx', sex: 0 },
+        { date: '2021/12/12',name: 'Sam', mobile: '15299xxxx', sex: 0 },
+        { date: '2021/12/12',name: 'Jean', mobile: '13452xxxx', sex: 1 },
+        { date: '2021/12/12',name: 'Tony', mobile: '187233xxxx', sex: 0 },
+        { date: '2021/12/12',name: 'Sam', mobile: '15299xxxx', sex: 0 },
+        { date: '2021/12/12',name: 'Jean', mobile: '13452xxxx', sex: 1 },
+        { date: '2021/12/12',name: 'Tony', mobile: '187233xxxx', sex: 0 }
+      ],
+      pagination: {
+        page: 10,
+        limit: 1,
+        total: 0
       },
-      columns: [
-        { prop: 'name', label: '名字', width: 140 },
-        { prop: 'mobile', label: '电话', minWidth: 180 },
-        { prop: 'mobile', label: '电话', minWidth: 180 },
-        { prop: 'mobile', label: '电话', minWidth: 180 },
-        { prop: 'mobile', label: '电话', minWidth: 180 },
-        { prop: 'mobile', label: '电话', minWidth: 180 },
-        { prop: 'mobile', label: '电话', minWidth: 180 },
-        { prop: 'mobile', label: '电话', minWidth: 180 },
-        { prop: 'sex', label: '型号', width: 100,
-          render: row => {
-          const { sex } = row
-          return sex === 0 ? 'Male' : sex === 1 ? 'Female' : 'Unknow'
-          }
+      operates: {},
+      columns: Object.freeze([
+        {
+          prop: 'mobile',
+          label: '作者',
+          // width: '110',
+          'show-overflow-tooltip': true,
+          id: 2
+        },
+        {
+          prop: 'sex',
+          label: '性别',
+          'show-overflow-tooltip': true,
+          render: scope => {
+            const { sex } = scope.row
+            return sex === 0 ? 'Male' : sex === 1 ? 'Female' : 'Unknow'
+          },
+          id: 3
+        },
+        {
+          slot: 'handle',
+          label: '操作',
+          width: '230',
+          align: 'center',
+          id: 4
         }
-      ],
-      tableData: [
-        { name: 'Sam', mobile: '15299xxxx', sex: 0 },
-        { name: 'Jean', mobile: '13452xxxx', sex: 1 },
-        { name: 'Tony', mobile: '187233xxxx', sex: 0 },
-        { name: 'Sam', mobile: '15299xxxx', sex: 0 },
-        { name: 'Jean', mobile: '13452xxxx', sex: 1 },
-        { name: 'Tony', mobile: '187233xxxx', sex: 0 },
-        { name: 'Sam', mobile: '15299xxxx', sex: 0 },
-        { name: 'Jean', mobile: '13452xxxx', sex: 1 },
-        { name: 'Tony', mobile: '187233xxxx', sex: 0 },
-        { name: 'Sam', mobile: '15299xxxx', sex: 0 },
-        { name: 'Jean', mobile: '13452xxxx', sex: 1 },
-        { name: 'Tony', mobile: '187233xxxx', sex: 0 }
-      ],
-      // 下拉组件
-      option: [
-        { value: 'Sam233333333333333333333333', label: '15299xxxx', sex: 0 },
-        { value: 'SANm', label: '4233333333333332333333333333333333333333333333333333333333333', sex: 0 },
-        { value: '3', label: '5232', sex: 0 },
-      ],
-      selectValue: [],
-      forms: { 
-        valueKey: 'id', labelKey: 'label', 
-        options: []
-      }
-        
+      ]),
+      loading: false
     }
   },
   methods: {
@@ -85,6 +79,15 @@ export default {
       setTimeout(() => {
         done()
       }, 1000)
+    },
+    handleUpdate(row,index) {
+      console.log(row,index)
+    },
+    handleDelete(row, index) {
+      console.log(row,index)
+    },
+    selectionChange(val) {
+      console.log(val)
     }
   },
   created() {
@@ -92,7 +95,8 @@ export default {
     for (var i = 1; i < 1000; i++) {
       arr.push({id: i, label: String(i+'你好')})
     }
-    this.forms.option = arr;
+    console.log(this.list)
+    // this.forms.option = arr;
   }
 }
 </script>
