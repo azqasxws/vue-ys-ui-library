@@ -1,6 +1,6 @@
 <template>
 <div>
-  <ys-table-pagination ref="tablePagination" :data="list" border v-loading="loading" :columns="columns" :isSelection="true" @selection-change="selectionChange">
+  <ys-table-pagination ref="tablePagination" border v-loading="loading" :columns="columns" :isSelection="true" @selection-change="selectionChange">
     <template v-slot:handle="slot">
       <el-button type="primary" size="mini" @click="handleUpdate(slot.scope.row, slot.scope.$index)">
           修改

@@ -46,8 +46,8 @@
       background
       class="system-pagination"
       layout="prev, pager, next,sizes,jumper"
-      @size-change="sizeChange"
-      @current-change="pageChange">
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange">
     </el-pagination> 
   </div>
 </template>
@@ -113,6 +113,9 @@ export default {
     slotColumns() {
       return this.columns.filter(item => item.slot === 'handle') 
     }
+  },
+  mounted() {
+    this.autoQuery && this.fetchList()
   },
   methods: {
     handleSizeChange(val) {
