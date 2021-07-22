@@ -1,6 +1,6 @@
 <template>
 <div>
-  <ys-table-pagination :data="list" border v-loading="loading" :columns="columns" :pagination="pagination" :isSelection="true" @selection-change="selectionChange">
+  <ys-table-pagination ref="tablePagination" :data="list" border v-loading="loading" :columns="columns" :isSelection="true" @selection-change="selectionChange">
     <template v-slot:handle="slot">
       <el-button type="primary" size="mini" @click="handleUpdate(slot.scope.row, slot.scope.$index)">
           修改
@@ -71,6 +71,12 @@ export default {
     }
   },
   methods: {
+    clearSelection() {
+      this.$refs.tablePagination.clearSelection();
+    },
+    searchList() {
+      this.$refs.tablePagination.handleSearch();
+    },
     selectValueCahgne(val) {
       console.log(val)
     },

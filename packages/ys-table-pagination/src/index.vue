@@ -5,6 +5,8 @@
       class="ys-table"
       v-bind="$attrs"
       v-on="$listeners"
+      :data="tableData"
+      ref="tablePagination"
     >
       <el-table-column 
         type="selection"
@@ -37,10 +39,10 @@
     </el-table>
     <el-pagination
       v-if="pagination"
-      :current-page="pagination.page"
-      :page-sizes="[10, 20, 50, 100]"
-      :page-size="pagination.limit"
-      :total="pagination.total"
+      :current-page.sync="currentPage"
+      :page-sizes="[10, 20, 30, 40, 50, 100]"
+      :page-size="pageSize"
+      :total="total"
       background
       class="system-pagination"
       layout="prev, pager, next,sizes,jumper"
@@ -54,13 +56,19 @@ import Vue from 'vue'
 export default {
   name:'YsTablePagination',
   props: {
+    // 传入查询的方法
+    httpApi: {
+      type: Function,
+      default: () => {}
+    },
+    // 表格渲染配置的参数
     columns: {
       type: Array,
       default: () => []
     },
     pagination: {
-      type: [Object, Boolean],
-      default: () => {}
+      type: Boolean,
+      default: true
     },
     sizeChange: {
       type: Function,
@@ -70,17 +78,30 @@ export default {
       type: Function,
       default: () => {}
     },
-    theme: {
-      type: String,
-      default: 'light'
-    },
-    tooltip: {
-      type: Boolean,
-      default: true
-    },
     isSelection: {
       type: Boolean,
       default: false
+    },
+    // 传入查询的参数
+    searchForm: {
+      tupe: Object,
+      default: () => {
+        return {}
+      }
+    },
+    autoQuery: {
+      type: Boolean,
+      default: true
+    },
+  },
+  data() {
+    return {
+      pageSize: 10,
+      currentPage: 1,
+      total: 0,
+      pageSizes: [10, 20, 30, 40, 50, 100],
+      tableData: [],
+      loading: false
     }
   },
   computed: {
@@ -93,10 +114,39 @@ export default {
       return this.columns.filter(item => item.slot === 'handle') 
     }
   },
-  data() {
-    console.log(this.$props)
-    return {}
-  }
+  methods: {
+    handleSizeChange(val) {
+      this.pageSize = val
+      this.fetchList()
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val
+      this.fetchList()
+    },
+    async fetchList() {
+      const params = {
+        pageNum: this.currentPage,
+        pageSize: this.pageSize
+      }
+      this.loading = true
+      const res = await this.httpApi({ ...params, ...this.searchForm })
+      this.loading = false
+      if (res.code !== 200) return
+      const { list, total, records } = res.result
+      this.tableData = list || records || []
+      this.total = Number(total)
+      this.$emit('list-data', this.tableData)
+      this.$nextTick(() => {
+        this.$refs.tablePagination && this.$refs.tablePagination.doLayout()
+      })
+    },
+    handleSearch(page) {
+      if (page) {
+        this.currentPage = page
+      }
+      this.fetchList()
+    }
+  },
 }
 </script>
 <style lang="less" scoped>
