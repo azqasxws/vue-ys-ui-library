@@ -10,8 +10,8 @@
     v-on="$listeners">
     <el-option v-for="(item,index) in resOptions.slice(0, rangeNumber)"
       :key="index+'-'+'YS'"
-      :value="item[selectOptions.valueKey]"
-      :label="item[selectOptions.labelKey]">
+      :value="item[selectOptions.valueKey || 'value']"
+      :label="item[selectOptions.labelKey || 'label']">
     </el-option>
   </el-select>
 </template>
@@ -21,7 +21,7 @@ import fun from './utils'
 export default {
   name:'YsSelect',
   props: {
-    selectValue: [String, Number, Array],
+    // selectValue: [String, Number, Array],
     selectOptions: {
       type: Object,
       default: () => {
@@ -37,7 +37,7 @@ export default {
     console.log(this.$props)
     let optionsArr = JSON.parse(JSON.stringify(this.selectOptions.option)); // 获取下拉所有数据方便做操作
     return {
-        selectOldvalue: this.selectValue, // vue不允许修改父组件prpos传参，需要重新赋值定义
+        selectOldvalue: null,
         rangeNumber: 50,
         resOptions: [],
         optionsArr: optionsArr
@@ -71,6 +71,7 @@ export default {
         this.resOptions = fun.unique([...selectListArr,...finalList],this.selectOptions.valueKey);
       }
     },50),
+    // 获取搜索数据
     getfilterArr(filterVal) {
       let filterArr = this.optionsArr.filter((item)=>{
         return item.label.toLowerCase().includes(filterVal.toLowerCase())
@@ -98,13 +99,17 @@ export default {
     // 初始化判断是否有初始值
     getListInit() {
       let isArray = Array.isArray(this.selectValue);
-      if (isArray && this.selectValue.length > 0) {return this.filterMethod() };
-      if (!isArray && this.selectValue!== '') {return this.filterMethod() };
+      if ((isArray && this.selectValue.length > 0) || (!isArray && this.selectValue!== '')) {return this.filterMethod() };
       this.resOptions = this.optionsArr.slice(0, this.rangeNumber)
     }
   },
   created() {
     this.getListInit()
+  },
+  watch: {
+    selectValue(val) {
+       this.selectOldvalue = val; // vue不允许修改父组件prpos传参，需要重新赋值定义
+    }
   },
   directives:{
     'el-select-loadmore':(el, binding) => {

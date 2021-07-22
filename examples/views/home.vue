@@ -1,6 +1,6 @@
 <template>
 <div>
-  <ys-table-pagination ref="tablePagination" border v-loading="loading" :columns="columns" :isSelection="true" @selection-change="selectionChange">
+  <ys-table-pagination ref="tablePagination" border v-loading="loading" :columns="columns" :isSelection="true" @selection-change="selectionChange" :autoQuery="false">
     <template v-slot:handle="slot">
       <el-button type="primary" size="mini" @click="handleUpdate(slot.scope.row, slot.scope.$index)">
           修改
@@ -10,17 +10,17 @@
       </el-button>
     </template>
   </ys-table-pagination>
-  <!-- <ys-select  clearable :selectValue="selectValue" @change="selectValueCahgne" filterable :selectOptions="forms" style="width:400px;"></ys-select> -->
-  <!-- <ys-button :auto-loading="true" @click="submit">
+  <ys-select  clearable multiple :selectValue="selectValue" @change="selectValueCahgne" filterable :selectOptions="forms" style="width:400px;"></ys-select>
+  <ys-button :auto-loading="true" @click="submit">
     自动loading按钮
-  </ys-button> -->
+  </ys-button>
 </div>
 </template>
 <script>
 export default {
   data() {
     return {
-      selectValue: null,
+      selectValue: [],
       list: [
         { date: '2021/12/12',name: 'Sam', mobile: '15299xxxx', sex: 0 },
         { date: '2021/12/12',name: 'Jean', mobile: '13452xxxx', sex: 1 },
@@ -67,7 +67,12 @@ export default {
           id: 4
         }
       ]),
-      loading: false
+      loading: false,
+      forms: {
+        valueKey: 'id',
+        labelKey: 'label',
+        option: []
+      }
     }
   },
   methods: {
@@ -83,6 +88,7 @@ export default {
     submit(done) {
     // 这里供业务组件处理一些事情,比如ajax请求,此处用setTimeout模拟,    执行done()方法消失loading
       setTimeout(() => {
+        console.log(this.selectValue)
         done()
       }, 1000)
     },
@@ -102,7 +108,7 @@ export default {
       arr.push({id: i, label: String(i+'你好')})
     }
     console.log(this.list)
-    // this.forms.option = arr;
+    this.forms.option = arr;
   }
 }
 </script>
