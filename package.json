@@ -1,6 +1,6 @@
 {
   "name": "vue-ys-ui-library",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "main": "lib/index/index.js",
   "keyword": "vue-ys-ui-library",
   "description": "基于element的组件库",
