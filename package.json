@@ -1,6 +1,6 @@
 {
   "name": "vue-ys-ui-library",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "main": "lib/index/index.js",
   "keyword": "vue-ys-ui-library",
   "description": "基于element的组件库",
@@ -9,7 +9,10 @@
   "scripts": {
     "dev": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lib": "vue-cli-service build --target lib --name vue-ys-ui-library --dest lib packages/index.js"
+    "lib": "vue-cli-service build --target lib --name vue-ys-ui-library --dest lib packages/index.js",
+    "_____comment": "npm run git -- 'commit-msg'  so you can push and update by a auto way",
+    "git": "npm run build && git add . && git commit -m",
+    "postgit": "npm version patch && npm publish && git push --all"
   },
   "dependencies": {
     "core-js": "^3.8.1",

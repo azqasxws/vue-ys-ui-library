@@ -12,6 +12,8 @@ npm i vue-ys-ui-library
 mian.js文件引入
 ```js
 import YsSelect from 'vue-ys-ui-library'
+import YsTablePagination from 'vue-ys-ui-library'
+import YsButton from 'vue-ys-ui-library'
 Vue.use(YsSelect)
 ```
 ```vue
