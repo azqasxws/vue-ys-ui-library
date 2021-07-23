@@ -60,6 +60,7 @@ export default {
           this.resOptions = fun.unique([...selectListArr,...finalList],this.selectOptions.valueKey);
         } else {
           this.resOptions = !!filterVal ? this.getfilterArr(filterVal) : this.optionsArr.slice(0, this.rangeNumber);
+          console.log(this.resOptions)
         }
       } else {
         this.optionsArr.forEach(item => {
@@ -68,6 +69,7 @@ export default {
         })
         selectListArr = this.getSelectList([this.selectOldvalue], this.optionsArr, this.selectOptions.valueKey);
         this.resOptions = fun.unique([...selectListArr,...finalList],this.selectOptions.valueKey);
+        console.log(this.resOptions)
       }
     },50),
     // 获取搜索数据
