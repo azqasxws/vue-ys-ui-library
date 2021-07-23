@@ -21,7 +21,6 @@ import fun from './utils'
 export default {
   name:'YsSelect',
   props: {
-    // selectValue: [String, Number, Array],
     selectOptions: {
       type: Object,
       default: () => {
