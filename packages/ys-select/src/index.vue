@@ -98,7 +98,8 @@ export default {
     // 初始化判断是否有初始值
     getListInit() {
       let isArray = Array.isArray(this.selectValue);
-      if ((isArray && this.selectValue.length > 0) || (!isArray && this.selectValue!== '')) {return this.filterMethod() };
+      console.log(isArray, this.optionsArr, !this.selectValue);
+      if ((isArray && this.selectValue.length > 0) || (!isArray && this.selectValue!== '')) return this.filterMethod();
       this.resOptions = this.optionsArr.slice(0, this.rangeNumber)
     }
   },
@@ -107,7 +108,7 @@ export default {
   },
   watch: {
     selectValue(val) {
-       this.selectOldvalue = val; // vue不允许修改父组件prpos传参，需要重新赋值定义
+      this.selectOldvalue = val; // vue不允许修改父组件prpos传参，需要重新赋值定义
     }
   },
   directives:{
