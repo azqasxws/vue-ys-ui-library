@@ -1,6 +1,4 @@
-# vue-ys-ui-library
-
-# 项目名称： vue + element-ui 二次封装
+# 项目名称： vue-ys-ui-library(vue + element-ui 二次封装)
 
 # 项目背景
 满足公司多个项目不同前端开发通用的组件库，减少代码量

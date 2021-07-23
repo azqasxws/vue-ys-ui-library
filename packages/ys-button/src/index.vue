@@ -10,13 +10,17 @@
 </template>
 <script>
 import Vue from 'vue'
-import props from './props'
 export default {
   name:'YsButton',
-  props,
+  props: {
+    autoLoading: {
+      type: Boolean,
+      default: false
+    }
+  },
   data(){
     return {
-        loadingStatus: false
+      loadingStatus: false
     }
   },
   methods: {

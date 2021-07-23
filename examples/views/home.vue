@@ -10,7 +10,7 @@
       </el-button>
     </template>
   </ys-table-pagination>
-  <ys-select  clearable multiple :selectValue="selectValue" @change="selectValueCahgne" filterable :selectOptions="forms" style="width:400px;"></ys-select>
+  <ys-select  clearable :selectValue="selectValue" @change="selectValueCahgne" filterable :selectOptions="forms" style="width:400px;"></ys-select>
   <ys-button :auto-loading="true" @click="submit">
     自动loading按钮
   </ys-button>
