@@ -22,7 +22,7 @@ Vue.use(YsButton)
 使用继承element-ui组件select的所有props和函数，想详情可见https://element.eleme.cn/#/zh-CN/component/select
 ```vue
 <template>
-  <ys-select :selectValue="selectValue" :selectOptions="forms" multiple></ys-select>
+  <ys-select v-model="selectValue" :selectOptions="forms" :optionList="optionList" multiple></ys-select>
 </template>
 <script>
 export default {
@@ -30,10 +30,10 @@ export default {
     return {
       selectValue: '', // 根据multiple字段初始化为String,Number,Array
       forms: {
-        option: [], // 初始化下拉数据源
         valueKey: 'id', // 绑定初始为id，可以修改成需要传递的值
         labelKey: 'label' // 绑定初始为label，可以修改成需要展示的label值
-      }
+      },
+      optionList: []// 初始化下拉数据源
     }
   }
 }
