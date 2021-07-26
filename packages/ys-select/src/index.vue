@@ -39,7 +39,7 @@ export default {
     }
   },
   data(){
-    let optionsArr = JSON.parse(JSON.stringify(this.optionList)) || []; // 获取下拉所有数据方便做操作
+    let optionsArr = [...this.optionList]; // 获取下拉所有数据方便做操作
     let initValue = this.$attrs.value // 获取初始化值
     return {
         selectOldvalue: initValue,
@@ -118,7 +118,7 @@ export default {
     },
     optionList: {
       handler (newValue, oldValue) {
-        this.optionsArr = newValue
+        this.optionsArr = [...newValue]
         this.getListInit();
       },
       deep: true // 默认值是 false，代表是否深度监听
