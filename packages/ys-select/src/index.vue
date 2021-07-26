@@ -36,6 +36,10 @@ export default {
       default: () => {
         return []
       }
+    },
+    initNum: {
+      type: Number,
+      default: 50
     }
   },
   data(){
@@ -43,7 +47,7 @@ export default {
     let initValue = this.$attrs.value // 获取初始化值
     return {
         selectOldvalue: initValue,
-        rangeNumber: 50,
+        rangeNumber: 100,
         resOptions: [],
         optionsArr: optionsArr
     }
@@ -56,6 +60,7 @@ export default {
     },
     // 筛选方法 包含初始化有数据和无数据的处理
     filterMethod:fun._debounce(function(filterVal){
+      console.log(filterVal)
       let selectListArr = [] 
       let isArray = Array.isArray(this.selectOldvalue) // 判断是多选还是单选
       let finalList = [];
@@ -113,9 +118,6 @@ export default {
     this.getListInit()
   },
   watch: {
-    selectValue(val) {
-      this.selectOldvalue = val; // vue不允许修改父组件prpos传参，需要重新赋值定义
-    },
     optionList: {
       handler (newValue, oldValue) {
         this.optionsArr = [...newValue]

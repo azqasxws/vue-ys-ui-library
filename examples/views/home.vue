@@ -10,7 +10,7 @@
       </el-button>
     </template>
   </ys-table-pagination>
-  <ys-select  clearable multiple v-model="selectValue" @change="selectValueCahgne" filterable :selectOptions="forms" :optionList="optionList" style="width:400px;"></ys-select>
+  <ys-select  clearable multiple v-model="selectValue" @change="selectValueCahgne" filterable :selectOptions="forms" :initNum="100" :optionList="optionList" style="width:400px;"></ys-select>
   <ys-button :auto-loading="true" @click="submit">
     自动loading按钮
   </ys-button>
@@ -20,7 +20,7 @@
 export default {
   data() {
     return {
-      selectValue: [2, 100],
+      selectValue: [],
       list: [
         { date: '2021/12/12',name: 'Sam', mobile: '15299xxxx', sex: 0 },
         { date: '2021/12/12',name: 'Jean', mobile: '13452xxxx', sex: 1 },
