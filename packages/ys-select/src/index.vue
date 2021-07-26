@@ -20,23 +20,29 @@ import Vue from 'vue'
 import fun from './utils'
 export default {
   name:'YsSelect',
+  model: {
+    prop: 'value', //绑定的值，通过父组件传递
+    event: 'update', //自定义名
+  },
   props: {
     selectOptions: {
       type: Object,
       default: () => {
-        return {
-          valueKey: 'value',
-          labelKey: 'label',
-          option: []
-        }
+        return {}
+      }
+    },
+    optionList: {
+      type: Array,
+      default: () => {
+        return []
       }
     }
   },
   data(){
-    console.log(this.$props)
-    let optionsArr = JSON.parse(JSON.stringify(this.selectOptions.option)); // 获取下拉所有数据方便做操作
+    let optionsArr = JSON.parse(JSON.stringify(this.optionList)) || []; // 获取下拉所有数据方便做操作
+    let initValue = this.$attrs.value // 获取初始化值
     return {
-        selectOldvalue: null,
+        selectOldvalue: initValue,
         rangeNumber: 50,
         resOptions: [],
         optionsArr: optionsArr
@@ -48,7 +54,7 @@ export default {
       // elementui下拉超过7条才会出滚动条,如果初始不出滚动条无法触发loadMore方法
       return () => (this.rangeNumber += 50); // 每次滚动到底部可以新增条数  可自定义
     },
-    // 筛选方法
+    // 筛选方法 包含初始化有数据和无数据的处理
     filterMethod:fun._debounce(function(filterVal){
       let selectListArr = [] 
       let isArray = Array.isArray(this.selectOldvalue) // 判断是多选还是单选
@@ -60,7 +66,6 @@ export default {
           this.resOptions = fun.unique([...selectListArr,...finalList],this.selectOptions.valueKey);
         } else {
           this.resOptions = !!filterVal ? this.getfilterArr(filterVal) : this.optionsArr.slice(0, this.rangeNumber);
-          console.log(this.resOptions, 222)
         }
       } else {
         this.optionsArr.forEach(item => {
@@ -69,13 +74,12 @@ export default {
         })
         selectListArr = this.getSelectList([this.selectOldvalue], this.optionsArr, this.selectOptions.valueKey);
         this.resOptions = fun.unique([...selectListArr,...finalList],this.selectOptions.valueKey);
-        console.log(this.resOptions,111)
       }
     },50),
     // 获取搜索数据
     getfilterArr(filterVal) {
       let filterArr = this.optionsArr.filter((item)=>{
-        return item.label.toLowerCase().includes(filterVal.toLowerCase())
+        return item[this.selectOptions.labelKey || 'label'].toLowerCase().includes(filterVal.toLowerCase())
       })
       return filterArr
     },
@@ -99,9 +103,9 @@ export default {
     },
     // 初始化判断是否有初始值
     getListInit() {
-      let isArray = Array.isArray(this.selectValue);
-      console.log(isArray, this.optionsArr, !this.selectValue);
-      if ((isArray && this.selectValue.length > 0) || (!isArray && this.selectValue!== '')) return this.filterMethod();
+      let initValue = this.$attrs.value
+      let isArray = Array.isArray(initValue);
+      if ((isArray && initValue.length > 0) || (!isArray && initValue!== '')) return this.filterMethod();
       this.resOptions = this.optionsArr.slice(0, this.rangeNumber)
     }
   },
@@ -111,6 +115,16 @@ export default {
   watch: {
     selectValue(val) {
       this.selectOldvalue = val; // vue不允许修改父组件prpos传参，需要重新赋值定义
+    },
+    optionList: {
+      handler (newValue, oldValue) {
+        this.optionsArr = newValue
+        this.getListInit();
+      },
+      deep: true // 默认值是 false，代表是否深度监听
+    },
+    selectOldvalue (newValue, oldValue){
+      this.$emit('update', newValue);
     }
   },
   directives:{

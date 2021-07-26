@@ -10,7 +10,7 @@
       </el-button>
     </template>
   </ys-table-pagination>
-  <ys-select  clearable multiple :selectValue="selectValue" @change="selectValueCahgne" filterable :selectOptions="forms" style="width:400px;"></ys-select>
+  <ys-select  clearable multiple v-model="selectValue" @change="selectValueCahgne" filterable :selectOptions="forms" :optionList="optionList" style="width:400px;"></ys-select>
   <ys-button :auto-loading="true" @click="submit">
     自动loading按钮
   </ys-button>
@@ -20,7 +20,7 @@
 export default {
   data() {
     return {
-      selectValue: [],
+      selectValue: [2, 100],
       list: [
         { date: '2021/12/12',name: 'Sam', mobile: '15299xxxx', sex: 0 },
         { date: '2021/12/12',name: 'Jean', mobile: '13452xxxx', sex: 1 },
@@ -70,9 +70,10 @@ export default {
       loading: false,
       forms: {
         valueKey: 'id',
-        labelKey: 'label',
+        labelKey: 'name',
         option: []
-      }
+      },
+      optionList: []
     }
   },
   methods: {
@@ -105,10 +106,9 @@ export default {
   created() {
     let arr = [];
     for (var i = 1; i < 1000; i++) {
-      arr.push({id: i, label: String(i+'你好')})
+      arr.push({id: i, name: String(i+'你好')})
     }
-    console.log(this.list)
-    this.forms.option = arr;
+    this.optionList = arr;
   }
 }
 </script>
